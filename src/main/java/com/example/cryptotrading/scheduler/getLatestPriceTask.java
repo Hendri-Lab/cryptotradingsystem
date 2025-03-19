@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.example.cryptotrading.util.CryptoPair.*;
+
 @Component
 @EnableScheduling
 public class getLatestPriceTask {
@@ -37,43 +39,43 @@ public class getLatestPriceTask {
 
     @Scheduled(fixedRate = 10000) // Runs every 10 seconds
     public void priceRetrievalTask() {
-//        store the best pricing for customer
+//        store the best pricing
 //        Bid Price use for SELL order, Ask Price use for BUY order
 //        For sell orders(bid), store the highest bid price
 //        For buy orders(ask), store the lowest ask price
         Map<String, BigDecimal> cryptoPricesBid = new HashMap<>();
         Map<String, BigDecimal> cryptoPricesAsk = new HashMap<>();
 
-        cryptoPricesBid.put("ETHUSDT", null);
-        cryptoPricesBid.put("BTCUSDT", null);
+        cryptoPricesBid.put(ETHUSDT.getVal(), null);
+        cryptoPricesBid.put(BTCUSDT.getVal(), null);
 
-        cryptoPricesAsk.put("ETHUSDT", null);
-        cryptoPricesAsk.put("BTCUSDT", null);
+        cryptoPricesAsk.put(ETHUSDT.getVal(), null);
+        cryptoPricesAsk.put(BTCUSDT.getVal(), null);
 
         retrievePrice("https://api.binance.com/api/v3/ticker/bookTicker", cryptoPricesBid, cryptoPricesAsk, false);
         retrievePrice("https://api.huobi.pro/market/tickers", cryptoPricesBid, cryptoPricesAsk, true);
 
-        BigDecimal cryptoPricesBidBdEth = cryptoPricesBid.get("ETHUSDT");
-        BigDecimal cryptoPricesBidBdBtc = cryptoPricesBid.get("BTCUSDT");
+        BigDecimal cryptoPricesBidBdEth = cryptoPricesBid.get(ETHUSDT.getVal());
+        BigDecimal cryptoPricesBidBdBtc = cryptoPricesBid.get(BTCUSDT.getVal());
 
-        BigDecimal cryptoPricesAskBdEth = cryptoPricesAsk.get("ETHUSDT");
-        BigDecimal cryptoPricesAskBdBtc = cryptoPricesAsk.get("BTCUSDT");
+        BigDecimal cryptoPricesAskBdEth = cryptoPricesAsk.get(ETHUSDT.getVal());
+        BigDecimal cryptoPricesAskBdBtc = cryptoPricesAsk.get(BTCUSDT.getVal());
 
         if (!Objects.isNull(cryptoPricesBidBdEth)) {
-            CryptoPrices cryptoPrices = new CryptoPrices("ETHUSDT-BID", cryptoPricesBidBdEth, LocalDateTime.now());
+            CryptoPrices cryptoPrices = new CryptoPrices(ETHUSDTBID.getVal(), cryptoPricesBidBdEth, LocalDateTime.now());
             cryptoPricesService.saveCryptoPrices(cryptoPrices);
         }
         if (!Objects.isNull(cryptoPricesBidBdBtc)) {
-            CryptoPrices cryptoPrices = new CryptoPrices("BTCUSDT-BID", cryptoPricesBidBdBtc, LocalDateTime.now());
+            CryptoPrices cryptoPrices = new CryptoPrices(BTCUSDTBID.getVal(), cryptoPricesBidBdBtc, LocalDateTime.now());
             cryptoPricesService.saveCryptoPrices(cryptoPrices);
         }
 
         if (!Objects.isNull(cryptoPricesAskBdEth)) {
-            CryptoPrices cryptoPrices = new CryptoPrices("ETHUSDT-ASK", cryptoPricesAskBdEth, LocalDateTime.now());
+            CryptoPrices cryptoPrices = new CryptoPrices(ETHUSDTASK.getVal(), cryptoPricesAskBdEth, LocalDateTime.now());
             cryptoPricesService.saveCryptoPrices(cryptoPrices);
         }
         if (!Objects.isNull(cryptoPricesAskBdBtc)) {
-            CryptoPrices cryptoPrices = new CryptoPrices("BTCUSDT-ASK", cryptoPricesAskBdBtc, LocalDateTime.now());
+            CryptoPrices cryptoPrices = new CryptoPrices(BTCUSDTASK.getVal(), cryptoPricesAskBdBtc, LocalDateTime.now());
             cryptoPricesService.saveCryptoPrices(cryptoPrices);
         }
     }
@@ -106,39 +108,37 @@ public class getLatestPriceTask {
                 if (found == 2) break;
                 JsonObject jsonObj = el.getAsJsonObject();
                 String symbol = jsonObj.get("symbol").getAsString();
-                if (symbol.equalsIgnoreCase("ETHUSDT")) {
+                if (symbol.equalsIgnoreCase(ETHUSDT.getVal())) {
 //                    bid price starts
                     String bidPriceStr = getPriceStr(useData, jsonObj, "bidPrice", "bid");
                     BigDecimal bidPrice = new BigDecimal(bidPriceStr);
-                    bidPriceCalculation(cryptoPricesBid, bidPrice, "ETHUSDT");
+                    bidPriceCalculation(cryptoPricesBid, bidPrice, ETHUSDT.getVal());
 //                    bid price ends
 
 //                    ask price
                     String askPriceStr  = getPriceStr(useData, jsonObj, "askPrice", "ask");
                     BigDecimal askPrice = new BigDecimal(askPriceStr);
-                    askPriceCalculation(cryptoPricesAsk, askPrice, "ETHUSDT");
+                    askPriceCalculation(cryptoPricesAsk, askPrice, ETHUSDT.getVal());
 //                    ask price ends
 
                     found++;
                 }
-                else if (symbol.equalsIgnoreCase("BTCUSDT")) {
+                else if (symbol.equalsIgnoreCase(BTCUSDT.getVal())) {
 //                    bid price
                     String bidPriceStr = getPriceStr(useData, jsonObj, "bidPrice", "bid");
                     BigDecimal bidPrice = new BigDecimal(bidPriceStr);
-                    bidPriceCalculation(cryptoPricesBid, bidPrice, "BTCUSDT");
+                    bidPriceCalculation(cryptoPricesBid, bidPrice, BTCUSDT.getVal());
 //                    bid price ends
 
 //                    ask price
                     String askPriceStr  = getPriceStr(useData, jsonObj, "askPrice", "ask");
                     BigDecimal askPrice = new BigDecimal(askPriceStr);
-                    askPriceCalculation(cryptoPricesAsk, askPrice, "BTCUSDT");
+                    askPriceCalculation(cryptoPricesAsk, askPrice, BTCUSDT.getVal());
 //                    ask price ends
 
                     found++;
                 }
             }
-
-
         } catch (Exception e) {
             logger.error("An error occurred: {}", e.getMessage(), e);
         }

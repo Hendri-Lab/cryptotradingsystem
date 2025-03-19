@@ -25,4 +25,9 @@ public class CryptoPricesServiceImpl implements CryptoPricesService {
     public void saveCryptoPrices(CryptoPrices cryptoPrices) {
         cryptoPricesRepository.save(cryptoPrices);
     }
+
+    @Override
+    public CryptoPrices findByCryptoPair(String cryptoPair) {
+        return cryptoPricesRepository.findByCryptoPair(cryptoPair);
+    }
 }

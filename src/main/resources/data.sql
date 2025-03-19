@@ -20,7 +20,7 @@ CREATE TABLE transactions (
                               user_id INT NOT NULL,
                               username VARCHAR(255) NOT NULL,
                               transaction_type ENUM('buy', 'sell'),
-                              crypto_pair VARCHAR(10),
+                              crypto_pair VARCHAR(15),
                               amount DECIMAL(18, 8), -- Amount of crypto
                               price DECIMAL(18, 8), -- Price at the time of transaction
                               total DECIMAL(18, 8), -- Total value of transaction (amount * price)

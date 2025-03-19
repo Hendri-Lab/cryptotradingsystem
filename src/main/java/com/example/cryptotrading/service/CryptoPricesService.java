@@ -9,4 +9,5 @@ public interface CryptoPricesService {
 
     void saveCryptoPrices(CryptoPrices cryptoPrices);
 
+    CryptoPrices findByCryptoPair(String cryptoPair);
 }

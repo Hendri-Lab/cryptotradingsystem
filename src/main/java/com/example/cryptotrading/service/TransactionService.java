@@ -8,4 +8,6 @@ public interface TransactionService {
 
     List<Transaction> findAllTransactionsByUser(String username);
 
+    String saveTransaction(Transaction transaction);
+
 }

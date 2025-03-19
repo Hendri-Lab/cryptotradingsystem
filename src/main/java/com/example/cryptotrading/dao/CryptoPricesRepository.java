@@ -4,4 +4,5 @@ import com.example.cryptotrading.models.CryptoPrices;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CryptoPricesRepository extends JpaRepository<CryptoPrices, Integer> {
+    CryptoPrices findByCryptoPair(String cryptoPair);
 }

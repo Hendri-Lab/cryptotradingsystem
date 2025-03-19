@@ -1,5 +1,6 @@
 package com.example.cryptotrading.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,12 +15,14 @@ import java.time.LocalDateTime;
 @Table(name = "transactions")
 public class Transaction {
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="transaction_id")
     private int transactionId;
 
+    @JsonIgnore
     @Column(name="user_id")
-    String userId;
+    int userId;
 
     @Column(name="username")
     String username;
@@ -45,7 +48,7 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(String userId, String username, String transactionType, String cryptoPair, BigDecimal amount, BigDecimal price, BigDecimal total, LocalDateTime createdAt) {
+    public Transaction(int userId, String username, String transactionType, String cryptoPair, BigDecimal amount, BigDecimal price, BigDecimal total, LocalDateTime createdAt) {
         this.userId = userId;
         this.username = username;
         this.transactionType = transactionType;
@@ -72,11 +75,11 @@ public class Transaction {
         this.username = username;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
