@@ -17,20 +17,21 @@ CREATE TABLE wallets (
 
 CREATE TABLE transactions (
                               transaction_id INT PRIMARY KEY AUTO_INCREMENT,
-                              user_id INT,
+                              user_id INT NOT NULL,
+                              username VARCHAR(255) NOT NULL,
                               transaction_type ENUM('buy', 'sell'),
                               crypto_pair VARCHAR(10),
                               amount DECIMAL(18, 8), -- Amount of crypto
                               price DECIMAL(18, 8), -- Price at the time of transaction
                               total DECIMAL(18, 8), -- Total value of transaction (amount * price)
-                              timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                               FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE crypto_prices (
-                               crypto_pair VARCHAR(10) PRIMARY KEY,  -- 'ETHUSDT', 'BTCUSDT'
+                               crypto_pair VARCHAR(15) PRIMARY KEY,  -- 'ETHUSDT-BID', 'ETHUSDT-ASK', 'BTCUSDT-BID', 'BTCUSDT-ASK'
                                price DECIMAL(18, 8) NOT NULL,
-                               timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                               created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 INSERT INTO users (user_id, username, email, password)

@@ -1,7 +1,10 @@
 package com.example.cryptotrading.controllers;
 
+import com.example.cryptotrading.models.CryptoPrices;
 import com.example.cryptotrading.models.User;
 import com.example.cryptotrading.models.Wallet;
+import com.example.cryptotrading.service.CryptoPricesService;
+import com.example.cryptotrading.service.TransactionService;
 import com.example.cryptotrading.service.UserService;
 import com.example.cryptotrading.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +25,15 @@ public class CryptoController {
 
     final UserService userService;
     final WalletService walletService;
+    final TransactionService transactionService;
+    final CryptoPricesService cryptoPricesService;
 
     @Autowired
-    public CryptoController(UserService userService, WalletService walletService) {
+    public CryptoController(UserService userService, WalletService walletService, TransactionService transactionService, CryptoPricesService cryptoPricesService) {
         this.userService = userService;
         this.walletService = walletService;
+        this.transactionService = transactionService;
+        this.cryptoPricesService = cryptoPricesService;
     }
 
     @GetMapping("/balance/{username}")
@@ -47,6 +54,11 @@ public class CryptoController {
             }
         }
         return result;
+    }
+
+    @GetMapping("/latest-crypto-prices")
+    public List<CryptoPrices> getLatestCryptoPrices() {
+        return cryptoPricesService.findAllCryptoPrices();
     }
 
 }
